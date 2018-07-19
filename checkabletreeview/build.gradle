@@ -2,10 +2,34 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
 
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+ext {
+
+    bintrayRepo = 'CheckableTreeView'
+    bintrayName = 'com.f3401pal.checkabletreeview'
+
+    libraryName = 'textviewplus'
+
+    publishedGroupId = 'com.f3401pal.checkabletreeview'
+    artifact = 'checkabletreeview'
+    libraryVersion = '1.0'
+
+    libraryDescription = 'Android Checkable and expandable tree list based on single RecyclerView'
+    siteUrl = 'https://github.com/f3401pal/CheckableTreeView'
+    gitUrl = 'https://github.com/f3401pal/CheckableTreeView.git'
+    licenseName = 'The MIT License'
+    licenseUrl = 'https://opensource.org/licenses/mit-license.php'
+    allLicenses = ['The MIT License']
+
+    developerId = 'f3401pal'
+    developerName = 'Andy Wang'
+    developerEmail = 'f3401pal@gmail.com'
+}
+
 android {
     compileSdkVersion 28
-
-
 
     defaultConfig {
         minSdkVersion 23
@@ -40,4 +64,9 @@ dependencies {
 }
 repositories {
     mavenCentral()
+}
+
+if(project.rootProject.file('local.properties').exists()) {
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 }
