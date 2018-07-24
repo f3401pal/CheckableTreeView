@@ -23,7 +23,7 @@ open class TreeNode<T : Checkable> : HasId {
     constructor(value: T, parent: TreeNode<T>?, children: List<TreeNode<T>>) {
         this.value = value
         this.parent = parent
-        this.children = children ?: emptyList()
+        this.children = children
     }
 
     // constructor for root node

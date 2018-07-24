@@ -47,6 +47,11 @@ android {
         }
     }
 
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -58,12 +63,10 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.0.0-beta01'
 
     testImplementation 'junit:junit:4.12'
-
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
-}
-repositories {
-    mavenCentral()
+    testImplementation 'androidx.test:runner:1.1.0-alpha4'
+    testImplementation 'androidx.test:rules:1.1.0-alpha4'
+    testImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    testImplementation "org.robolectric:robolectric:4.0-alpha-3"
 }
 
 if(project.rootProject.file('local.properties').exists()) {
