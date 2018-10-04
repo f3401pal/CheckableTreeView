@@ -64,9 +64,12 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:runner:1.1.0-alpha4'
-    testImplementation 'androidx.test:rules:1.1.0-alpha4'
-    testImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
     testImplementation "org.robolectric:robolectric:4.0-alpha-3"
+
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
+    androidTestImplementation 'androidx.test:rules:1.1.0-alpha4'
+    androidTestImplementation "io.mockk:mockk-android:1.8.9"
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
 }
 
 if(project.rootProject.file('local.properties').exists()) {

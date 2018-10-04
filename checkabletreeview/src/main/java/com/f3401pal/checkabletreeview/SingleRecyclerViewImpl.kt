@@ -65,15 +65,26 @@ class TreeAdapter<T : Checkable>(private val indentation: Int) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(nodes[position],  View.OnClickListener {
-            onToggle(position)
-        })
+        holder.bind(nodes[position])
     }
 
-    private fun onToggle(position: Int) {
-        val node = nodes[position]
-        if(expandedNodeIds.contains(node.id)) {
-            // collapse
+    @UiThread
+    private fun expand(position: Int) {
+        if(position >= 0) {
+            // expand
+            val node = nodes[position]
+            val insertPosition = position + 1
+            nodes.addAll(insertPosition, node.getChildren())
+            expandedNodeIds.add(node.id)
+            notifyDataSetChanged()
+        }
+    }
+
+    @UiThread
+    private fun collapse(position: Int) {
+        // collapse
+        if(position >= 0) {
+            val node = nodes[position]
             fun removeChildrenFrom(cur: TreeNode<T>) {
                 nodes.remove(cur)
                 if(expandedNodeIds.contains(cur.id)) {
@@ -85,18 +96,12 @@ class TreeAdapter<T : Checkable>(private val indentation: Int) : RecyclerView.Ad
 
             expandedNodeIds.remove(node.id)
             notifyDataSetChanged()
-        } else {
-            // expand
-            val insertPosition = position + 1
-            nodes.addAll(insertPosition, node.getChildren())
-            expandedNodeIds.add(node.id)
-            notifyDataSetChanged()
         }
     }
 
     inner class ViewHolder(view: View, private val indentation: Int) : RecyclerView.ViewHolder(view) {
 
-        internal fun bind(node: TreeNode<T>, onExpandListener: View.OnClickListener) {
+        internal fun bind(node: TreeNode<T>) {
             itemView.indentation.minimumWidth = indentation * node.getLevel()
 
             itemView.checkText.text = node.getValue().toString()
@@ -114,8 +119,12 @@ class TreeAdapter<T : Checkable>(private val indentation: Int) : RecyclerView.Ad
             } else {
                 itemView.expandIndicator.visibility = View.VISIBLE
                 itemView.expandIndicator.setImageResource(if(expandedNodeIds.contains(node.id)) R.drawable.ic_remove_black_24dp else R.drawable.ic_add_black_24dp)
+                if(expandedNodeIds.contains(node.id)) {
+                    itemView.expandIndicator.setOnClickListener { collapse(adapterPosition) }
+                } else {
+                    itemView.expandIndicator.setOnClickListener { expand(adapterPosition) }
+                }
             }
-            itemView.expandIndicator.setOnClickListener(onExpandListener)
 
             Log.d(TAG, "${node.getValue()}: hasChildChecked=${state.hasChildChecked}, allChildrenChecked=${state.allChildrenChecked}")
         }

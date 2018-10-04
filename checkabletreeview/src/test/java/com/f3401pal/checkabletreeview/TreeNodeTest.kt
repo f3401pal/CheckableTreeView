@@ -1,42 +1,12 @@
 package com.f3401pal.checkabletreeview
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.runner.AndroidJUnit4
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RuntimeEnvironment
 
 @RunWith(AndroidJUnit4::class)
-class TreeAdapterTest {
-
-    private val viewGroup = RecyclerView(RuntimeEnvironment.application)
-    private lateinit var adapter: TreeAdapter<StringNode>
-
-    @Before
-    fun setUp() {
-        adapter = TreeAdapter(0)
-    }
-
-    @Test
-    fun init_hasStableIds_true() {
-        Assert.assertTrue(adapter.hasStableIds())
-    }
-
-    @Test
-    fun init_isEmpty_true() {
-        Assert.assertEquals(0, adapter.itemCount)
-    }
-
-    @Test
-    fun onCreateViewHolder_returnsCorrectViewHolder() {
-        val viewHolder = adapter.createViewHolder(viewGroup, 0)
-
-    }
-
-}
-
 class TreeNodeTest {
 
     private lateinit var left: TreeNode<StringNode>
