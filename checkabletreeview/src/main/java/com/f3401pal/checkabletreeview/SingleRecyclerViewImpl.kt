@@ -74,9 +74,11 @@ class TreeAdapter<T : Checkable>(private val indentation: Int) : RecyclerView.Ad
             // expand
             val node = nodes[position]
             val insertPosition = position + 1
+            val insertedSize = node.getChildren().size
             nodes.addAll(insertPosition, node.getChildren())
             expandedNodeIds.add(node.id)
-            notifyDataSetChanged()
+            notifyItemChanged(position)
+            notifyItemRangeInserted(insertPosition, insertedSize)
         }
     }
 
@@ -85,17 +87,20 @@ class TreeAdapter<T : Checkable>(private val indentation: Int) : RecyclerView.Ad
         // collapse
         if(position >= 0) {
             val node = nodes[position]
+            var removeCount = 0
             fun removeChildrenFrom(cur: TreeNode<T>) {
                 nodes.remove(cur)
+                removeCount++
                 if(expandedNodeIds.contains(cur.id)) {
                     expandedNodeIds.remove(cur.id)
                     cur.getChildren().forEach { removeChildrenFrom(it) }
                 }
             }
             node.getChildren().forEach { removeChildrenFrom(it) }
-
             expandedNodeIds.remove(node.id)
-            notifyDataSetChanged()
+
+            notifyItemChanged(position)
+            notifyItemRangeRemoved(position + 1, removeCount)
         }
     }
 
