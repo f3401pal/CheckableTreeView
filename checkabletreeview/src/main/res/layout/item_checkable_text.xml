@@ -25,12 +25,11 @@
         tools:text="Text"
         />
 
-    <ImageView
+    <com.f3401pal.checkabletreeview.ExpandToggleButton
         android:id="@+id/expandIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_expand_collapse_toggle"
         android:contentDescription="@string/img_cd_expand_ic" />
 
 </LinearLayout>

@@ -5,4 +5,8 @@
     <target android:name="vertical_group"
         android:animation="@animator/rotation_90_180"
         />
+    <target
+        android:name="horizontal_group"
+        android:animation="@animator/rotation_0_180"
+        />
 </animated-vector>

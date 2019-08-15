@@ -87,7 +87,7 @@ class TreeAdapterTest {
     }
 
     @Test
-    fun `the adapter should add the ID of expanded nodes when expending`() {
+    fun `the node should be set to expanded when expended`() {
         val node = TreeNodeFactory.buildTestTree()
         with(adapter) {
             nodes.add(node)
@@ -97,21 +97,20 @@ class TreeAdapterTest {
             viewHolder.itemView.expandIndicator.performClick()
         }
 
-        assertTrue(adapter.expandedNodeIds.contains(node.id))
+        assertTrue(node.isExpanded)
     }
 
     @Test
     fun `child node should be hidden when collapse on parent node`() {
         val node = TreeNodeFactory.buildTestTree()
         with(adapter) {
-            expandedNodeIds.add(node.id)
+            node.isExpanded = true
             nodes.add(node)
             nodes.addAll(node.getChildren())
             val viewHolder = spyk(createViewHolder(viewGroup, 0))
             every { viewHolder.adapterPosition } returns 0
             bindViewHolder(viewHolder, 0)
 
-            assertTrue(adapter.expandedNodeIds.contains(node.id))
             assertEquals(3, adapter.itemCount)
 
             viewHolder.itemView.expandIndicator.performClick()
@@ -122,23 +121,22 @@ class TreeAdapterTest {
     }
 
     @Test
-    fun `the adapter should remove the ID of expanded nodes when collapsing`() {
+    fun `the node should be set to NOT expanded when collapse`() {
         val node = TreeNodeFactory.buildTestTree()
         with(adapter) {
-            expandedNodeIds.add(node.id)
+            node.isExpanded = true
             nodes.add(node)
             nodes.addAll(node.getChildren())
             val viewHolder = spyk(createViewHolder(viewGroup, 0))
             every { viewHolder.adapterPosition } returns 0
             bindViewHolder(viewHolder, 0)
 
-            assertTrue(adapter.expandedNodeIds.contains(node.id))
             assertEquals(3, adapter.itemCount)
 
             viewHolder.itemView.expandIndicator.performClick()
         }
 
-        assertTrue(adapter.expandedNodeIds.isEmpty())
+        assertFalse(node.isExpanded)
     }
 }
 

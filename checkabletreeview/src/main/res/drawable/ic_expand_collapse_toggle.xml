@@ -6,11 +6,20 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-    <path
-        android:name="horizontal"
-        android:pathData="M 4 12 L 20 12"
-        android:strokeColor="#000000"
-        android:strokeWidth="2"/>
+
+    <group
+        android:name="horizontal_group"
+        android:pivotX="12"
+        android:pivotY="12"
+        >
+
+        <path
+            android:name="horizontal"
+            android:pathData="M 4 12 L 20 12"
+            android:strokeColor="#000000"
+            android:strokeWidth="2"/>
+
+    </group>
 
     <group
         android:name="vertical_group"

@@ -56,7 +56,7 @@ class TreeAdapter<T : Checkable>(private val indentation: Int) : RecyclerView.Ad
         } else {
             expand(viewHolder.adapterPosition)
         }
-        startAnimation(node.isExpanded, viewHolder.itemView.expandIndicator)
+        viewHolder.itemView.expandIndicator.startToggleAnimation(node.isExpanded)
     }
 
     init {
@@ -110,12 +110,6 @@ class TreeAdapter<T : Checkable>(private val indentation: Int) : RecyclerView.Ad
             node.isExpanded = false
             notifyItemRangeRemoved(position + 1, removeCount)
         }
-    }
-
-    @UiThread
-    private fun startAnimation(expand: Boolean, imageView: ImageView) {
-        imageView.setImageResource(if(expand) R.drawable.ic_expand_toggle_animated else R.drawable.ic_collapse_toggle_animated)
-        (imageView.drawable as Animatable).start()
     }
 
     inner class ViewHolder(view: View, private val indentation: Int) : RecyclerView.ViewHolder(view) {
