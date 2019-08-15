@@ -22,21 +22,15 @@ data class StringNode(val str: String) : Checkable(false) {
     }
 }
 
-class TreeNode<T : Checkable> : HasId {
+class TreeNode<T : Checkable>(
+        private val value: T,
+        private val parent: TreeNode<T>?,
+        private var children: List<TreeNode<T>>,
+        override var isExpanded: Boolean =false
+) : HasId, Expandable {
 
     override val id: Long by lazy {
         IdGenerator.generate()
-    }
-
-    private val value: T
-
-    private var parent: TreeNode<T>?
-    private var children: List<TreeNode<T>>
-
-    constructor(value: T, parent: TreeNode<T>?, children: List<TreeNode<T>>) {
-        this.value = value
-        this.parent = parent
-        this.children = children
     }
 
     // constructor for root node

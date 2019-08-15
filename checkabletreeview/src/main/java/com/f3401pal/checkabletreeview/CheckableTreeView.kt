@@ -17,3 +17,7 @@ open class Checkable(internal var checked: Boolean)
 interface HasId {
     val id: Long
 }
+
+interface Expandable {
+    var isExpanded: Boolean
+}

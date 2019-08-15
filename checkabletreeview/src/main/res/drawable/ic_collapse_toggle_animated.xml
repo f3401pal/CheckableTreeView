@@ -1,0 +1,8 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_expand_collapse_toggle"
+    >
+    <target android:name="vertical_group"
+        android:animation="@animator/rotation_90_180"
+        />
+</animated-vector>
