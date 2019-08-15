@@ -1,6 +1,6 @@
 package com.f3401pal.checkabletreeview
 
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -26,23 +26,23 @@ class TreeNodeTest {
     }
 
     @Test
-    fun isTop_returnsTrue_ifParentIsNull() {
+    fun `the node is a root node if its parent is null`() {
         Assert.assertTrue(root.isTop())
     }
 
     @Test
-    fun isLeaf_returnTrue_ifChildrenIsEmpty() {
+    fun `the node is a leaf node if its child is empty`() {
         Assert.assertTrue(right.isLeaf())
     }
 
     @Test
-    fun setChecked_setAllChildrenToChecked() {
+    fun `set all children to be checked when their parent is checked`() {
         root.setChecked(true)
         Assert.assertTrue(root.getCheckedStatus().allChildrenChecked)
     }
 
     @Test
-    fun setChecked_setParentChecked() {
+    fun `set parent node checked when all its children are checked`() {
         left.setChecked(true)
         right.setChecked(true)
 
@@ -50,36 +50,41 @@ class TreeNodeTest {
     }
 
     @Test
-    fun setChecked_complexSequence() {
+    fun `all children is checked return correct value in sequence`() {
         root.setChecked(true)
         left.getChildren()[1].setChecked(false)
 
         Assert.assertFalse(root.getCheckedStatus().allChildrenChecked)
-        Assert.assertTrue(root.getCheckedStatus().hasChildChecked)
 
         right.setChecked(false)
         Assert.assertFalse(root.getCheckedStatus().allChildrenChecked)
-        Assert.assertFalse(right.getCheckedStatus().hasChildChecked)
 
         left.getChildren()[0].setChecked(false)
         Assert.assertFalse(root.getCheckedStatus().allChildrenChecked)
+    }
+
+    @Test
+    fun `has child check returns correct value in sequence`() {
+        root.setChecked(true)
+        left.getChildren()[1].setChecked(false)
+
+        Assert.assertTrue(root.getCheckedStatus().hasChildChecked)
+
+        right.setChecked(false)
+        Assert.assertFalse(right.getCheckedStatus().hasChildChecked)
+
+        left.getChildren()[0].setChecked(false)
         Assert.assertFalse(root.getCheckedStatus().hasChildChecked)
     }
 
     @Test
-    fun getCheckedStatus_returnAllChildrenCheckedTrue() {
-        root.setChecked(true)
-        Assert.assertTrue(root.getCheckedStatus().allChildrenChecked)
-    }
-
-    @Test
-    fun getCheckedStatus_returnHasChildCheckedTrue() {
+    fun `has child check is true if one of the child is checked`() {
         left.getChildren()[0].setChecked(true)
         Assert.assertTrue(root.getCheckedStatus().hasChildChecked)
     }
 
     @Test
-    fun getAggregatedValues_returnRootValue_ifAllChecked() {
+    fun `aggregated value returns the parent node text if all its children are checked`() {
         root.setChecked(true)
 
         Assert.assertEquals(1, root.getAggregatedValues().size)
@@ -87,7 +92,7 @@ class TreeNodeTest {
     }
 
     @Test
-    fun getAggregatedValues_returnCheckedValues() {
+    fun `aggregated value returns the checked child node text in depth`() {
         left.getChildren()[0].setChecked(true)
 
         Assert.assertEquals(1, root.getAggregatedValues().size)
@@ -95,7 +100,7 @@ class TreeNodeTest {
     }
 
     @Test
-    fun getAggregatedValues_returnAggregatedValue() {
+    fun `aggregated value returns ONLY the checked child node text if NOT all its children are checked`() {
         left.setChecked(true)
 
         Assert.assertEquals(1, root.getAggregatedValues().size)
@@ -103,12 +108,12 @@ class TreeNodeTest {
     }
 
     @Test
-    fun getLevel_returns2_onLevel3Node() {
+    fun `nodes with depth 3 has level 2`() {
         Assert.assertEquals(2, left.getChildren()[0].getLevel())
     }
 
     @Test
-    fun getLevel_returns0_onRootNode() {
+    fun `root node has level 0`() {
         Assert.assertEquals(0, root.getLevel())
     }
 }

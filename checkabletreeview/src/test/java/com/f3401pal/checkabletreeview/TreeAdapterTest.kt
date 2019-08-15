@@ -1,10 +1,11 @@
 package com.f3401pal.checkabletreeview
 
+import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.InstrumentationRegistry
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
@@ -18,7 +19,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class TreeAdapterTest {
 
-    private val context = InstrumentationRegistry.getTargetContext()
+    private val context = ApplicationProvider.getApplicationContext<Context>()
     private val viewGroup = RecyclerView(context).apply {
         layoutManager = LinearLayoutManager(context)
     }
@@ -30,24 +31,24 @@ class TreeAdapterTest {
     }
 
     @Test
-    fun init_hasStableIds_true() {
+    fun `the adapter has stable ID by default`() {
         assertTrue(adapter.hasStableIds())
     }
 
     @Test
-    fun init_isEmpty_true() {
+    fun `the adapter is empty on initialization`() {
         assertEquals(0, adapter.itemCount)
     }
 
     @Test
-    fun onCreateViewHolder_returnsCorrectViewHolder() {
+    fun `the adapter creates View holder that is not null`() {
         val viewHolder = adapter.createViewHolder(viewGroup, 0)
 
         assertNotNull(viewHolder)
     }
 
     @Test
-    fun getItemCount_returnsSizeOfNodes() {
+    fun `the adapter size should be the number of root node`() {
         val nodes = TreeNodeFactory.buildTestTree()
         adapter.nodes.add(nodes)
 
@@ -55,7 +56,7 @@ class TreeAdapterTest {
     }
 
     @Test
-    fun onBindViewHolder_bindCorrectNode() {
+    fun `the adapter should bind the ViewHolder to a node`() {
         val nodes = TreeNodeFactory.buildTestTree()
         adapter.nodes.add(nodes)
         val viewHolder: TreeAdapter<StringNode>.ViewHolder = mockk(relaxUnitFun = true)
@@ -68,7 +69,7 @@ class TreeAdapterTest {
     }
 
     @Test
-    fun expand_addChildNodesToTheDisplayList() {
+    fun `child node should be visible when expand on parent node`() {
         val node = TreeNodeFactory.buildTestTree()
         with(adapter) {
             nodes.add(node)
@@ -79,12 +80,14 @@ class TreeAdapterTest {
         }
 
         assertEquals(3, adapter.itemCount)
-        assertArrayEquals(adapter.nodes.subList(1, adapter.nodes.size).toTypedArray(),
-                node.getChildren().toTypedArray())
+        assertArrayEquals(
+                node.getChildren().toTypedArray(),
+                adapter.nodes.subList(1, adapter.nodes.size).toTypedArray()
+        )
     }
 
     @Test
-    fun expand_addNodeIdToExpendedNodeList() {
+    fun `the adapter should add the ID of expanded nodes when expending`() {
         val node = TreeNodeFactory.buildTestTree()
         with(adapter) {
             nodes.add(node)
@@ -98,7 +101,7 @@ class TreeAdapterTest {
     }
 
     @Test
-    fun collapse_removeChildNodesToTheDisplayList() {
+    fun `child node should be hidden when collapse on parent node`() {
         val node = TreeNodeFactory.buildTestTree()
         with(adapter) {
             expandedNodeIds.add(node.id)
@@ -115,12 +118,11 @@ class TreeAdapterTest {
         }
 
         assertEquals(1, adapter.itemCount)
-        assertArrayEquals(adapter.nodes.toTypedArray(), arrayOf(node))
+        assertArrayEquals(arrayOf(node), adapter.nodes.toTypedArray())
     }
 
     @Test
-    fun collapse_removeNodeIdToExpendedNodeList() {
-
+    fun `the adapter should remove the ID of expanded nodes when collapsing`() {
         val node = TreeNodeFactory.buildTestTree()
         with(adapter) {
             expandedNodeIds.add(node.id)
@@ -137,14 +139,13 @@ class TreeAdapterTest {
         }
 
         assertTrue(adapter.expandedNodeIds.isEmpty())
-
     }
 }
 
 @RunWith(AndroidJUnit4::class)
 class ViewHolderTest {
 
-    private val context = InstrumentationRegistry.getTargetContext()
+    private val context = ApplicationProvider.getApplicationContext<Context>()
     private val viewGroup = RecyclerView(context).apply {
         layoutManager = LinearLayoutManager(context)
     }
@@ -163,22 +164,22 @@ class ViewHolderTest {
     }
 
     @Test
-    fun bind_setExpandIndicatorForLeafNode() {
+    fun `expand indicator on leaf nodes should be hidden`() {
         subject.bind(leafNode)
 
         assertEquals(View.GONE, subject.itemView.expandIndicator.visibility)
     }
 
     @Test
-    fun bind_setExpandIndicatorForParentNode() {
+    fun `expand indicator on nodes with children should be shown`() {
         subject.bind(parentNode)
 
         assertEquals(View.VISIBLE, subject.itemView.expandIndicator.visibility)
     }
 
     @Test
-    fun bind_setCheckboxIndeterminate_ifHasChildrenCheckAndNotAllChildrenAreChecked() {
-        val status = NodeCheckedStatus(true, false)
+    fun `the item is indeterminate but NOT checked when only some its children are checked`() {
+        val status = NodeCheckedStatus(hasChildChecked = true, allChildrenChecked = false)
         spyk(parentNode).run {
             every { getCheckedStatus() } returns status
             subject.bind(this)
@@ -189,8 +190,8 @@ class ViewHolderTest {
     }
 
     @Test
-    fun bind_setCheckboxChecked_ifAllChildrenAreChecked() {
-        val status = NodeCheckedStatus(true, true)
+    fun `the item is both checked and indeterminate when all its children are checked`() {
+        val status = NodeCheckedStatus(hasChildChecked = true, allChildrenChecked = true)
         spyk(parentNode).run {
             every { getCheckedStatus() } returns status
             subject.bind(this)
@@ -201,14 +202,14 @@ class ViewHolderTest {
     }
 
     @Test
-    fun bind_setCheckboxTextToTheNodeValue() {
+    fun `the checkbox text should be the node text`() {
         subject.bind(leafNode)
 
         assertEquals(leafNode.getValue().str, subject.itemView.checkText.text)
     }
 
     @Test
-    fun bind_setIndentationByLevelOfDepth() {
+    fun `the start indentation should be 10 on level 1 node`() {
         subject.bind(leafNode)
 
         assertEquals(10, subject.itemView.indentation.minimumWidth)

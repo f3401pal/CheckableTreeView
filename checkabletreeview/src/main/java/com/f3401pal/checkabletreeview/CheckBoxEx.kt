@@ -4,8 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.CheckBox
+import androidx.appcompat.widget.AppCompatCheckBox
 
-class CheckBoxEx : CheckBox {
+class CheckBoxEx : AppCompatCheckBox {
 
     private var isIndeterminate = false
 
