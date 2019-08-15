@@ -5,8 +5,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    >
+    android:layout_margin="16dp">
 
     <Space
         android:id="@+id/indentation"
@@ -32,6 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_add_black_24dp"
-        />
+        android:contentDescription="@string/img_cd_expand_ic" />
 
 </LinearLayout>

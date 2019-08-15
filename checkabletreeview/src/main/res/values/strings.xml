@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CheckableTreeView</string>
+    <string name="img_cd_expand_ic">expand</string>
 </resources>
