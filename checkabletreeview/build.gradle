@@ -3,18 +3,16 @@ apply plugin: 'kotlin-android'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
 
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'org.jetbrains.dokka-android'
 
 ext {
-
     bintrayRepo = 'CheckableTreeView'
     bintrayName = 'com.f3401pal.checkabletreeview'
 
-    libraryName = 'textviewplus'
-
-    publishedGroupId = 'com.f3401pal.checkabletreeview'
+    publishedGroupId = bintrayName
+    libraryName = 'CheckableTreeView'
     artifact = 'checkabletreeview'
-    libraryVersion = '1.1'
+    libraryVersion = '1.2'
 
     libraryDescription = 'Android Checkable and expandable tree list based on single RecyclerView'
     siteUrl = 'https://github.com/f3401pal/CheckableTreeView'
@@ -26,6 +24,14 @@ ext {
     developerId = 'f3401pal'
     developerName = 'Andy Wang'
     developerEmail = 'f3401pal@gmail.com'
+
+    // Maven config
+    mavDevelopers = ["f3401pal":developerName]
+    mavSiteUrl = siteUrl
+    mavGitUrl = mavSiteUrl + '.git'
+    mavProjectName = libraryName
+    mavLibraryLicenses = ['The MIT License':licenseUrl]
+    mavLibraryDescription = libraryDescription
 }
 
 android {
@@ -35,7 +41,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 3
-        versionName "1.2"
+        versionName libraryVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -81,7 +87,10 @@ dependencies {
     testImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-if(project.rootProject.file('local.properties').exists()) {
-    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
 }
+
+apply from: "../publish.gradle"
+apply from: 'https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle'
